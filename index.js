@@ -6,7 +6,7 @@ const processParse = require("./lib/parse");
 const processCoord = require("./lib/coord");
 
 async function main() {
-  const url = "mongodb://localhost:27017";
+  const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
   const client = await mongo.MongoClient.connect(url);
   const db = client.db("gc");
   const collection = db.collection("gcs");
@@ -18,4 +18,7 @@ async function main() {
   await client.close();
 }
 
-main();
+main().catch(err => {
+  console.log(err);
+  process.exit(-1);
+});
