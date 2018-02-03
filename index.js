@@ -2,30 +2,24 @@ const debug = require("debug")("gc-lookup");
 const mongo = require("mongodb");
 
 const discover = require("./lib/discover");
-const processFetch = require("./lib/fetch");
 const processParse = require("./lib/parse");
-const processCoord = require("./lib/coord");
-const processApiFetch = require("./lib/apifetch");
+const processFetch = require("./lib/apifetch");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
   const client = await mongo.MongoClient.connect(url);
   const db = client.db("gc");
-  const collection = db.collection("gcs");
+  const areas = db.collection("areas");
+  const gcs = db.collection("gcs");
 
-  // find new GC numbers based in pre-defined areas
-  await discover(db.collection("areas"), collection);
+  // find new geocache numbers based in pre-defined areas
+  await discover(areas, gcs);
 
-  await processApiFetch(collection);
+  // download geocache information via Groundspeak API (requires authentication)
+  await processFetch(gcs);
 
-  // download geocache websites w/o authentication
-  await processFetch(collection);
-
-  // parse geocache websites (without coordinates)
-  await processParse(collection);
-
-  // download geocache coordintes (requires groundspeak account)
-  await processCoord(collection);
+  // parse/normalize geocache information
+  await processParse(gcs);
 
   await client.close();
 }
