@@ -5,6 +5,7 @@ const discover = require("./lib/discover");
 const processFetch = require("./lib/fetch");
 const processParse = require("./lib/parse");
 const processCoord = require("./lib/coord");
+const processApiFetch = require("./lib/apifetch");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
@@ -14,6 +15,8 @@ async function main() {
 
   // find new GC numbers based in pre-defined areas
   await discover(db.collection("areas"), collection);
+
+  await processApiFetch(collection);
 
   // download geocache websites w/o authentication
   await processFetch(collection);
