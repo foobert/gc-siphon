@@ -1,4 +1,3 @@
-const debug = require("debug")("gc-lookup");
 const mongo = require("mongodb");
 
 const discover = require("./lib/discover");
