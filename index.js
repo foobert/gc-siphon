@@ -5,6 +5,7 @@ const prepare = require("./lib/prepare");
 const discover = require("./lib/discover");
 const processParse = require("./lib/parse");
 const processFetch = require("./lib/apifetch");
+const processLogs = require("./lib/logs");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
@@ -12,6 +13,7 @@ async function main() {
   const db = client.db("gc");
   const areas = db.collection("areas");
   const gcs = db.collection("gcs");
+  const users = db.collection("users");
 
   // setup the database etc.
   await prepare({ areas, gcs });
@@ -21,6 +23,9 @@ async function main() {
 
   // download geocache information via Groundspeak API (requires authentication)
   await processFetch(gcs);
+
+  // download geocache log information via Groundspeak API (requires authentication)
+  await processLogs({ users, gcs });
 
   // parse/normalize geocache information
   await processParse(gcs);
