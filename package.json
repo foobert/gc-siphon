@@ -15,6 +15,7 @@
     "awilix": "^3.0.5",
     "debug": "^3.1.0",
     "lodash": "^4.17.4",
+    "moment": "^2.21.0",
     "mongodb": "^3.0.1",
     "superagent": "^3.8.2"
   },
