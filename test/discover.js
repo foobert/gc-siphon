@@ -22,7 +22,9 @@ describe("discover", () => {
       update: sinon.spy()
     };
 
-    const gcs = {};
+    const gcs = {
+      count: sinon.stub().resolves(0)
+    };
 
     const tile = {
       ok: true,
