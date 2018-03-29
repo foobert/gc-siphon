@@ -1,8 +1,6 @@
-# Lookup
+# Geocache Siphon
 
-The pipeline to discover and download/parse geocaches.
-
-(Probably needs to be renamed)
+A pipeline to discover, download and parse geocaches.
 
 Steps involved:
 
@@ -11,12 +9,11 @@ Steps involved:
 3. Download log information via Groundspeak API
 4. Parse/normalize data
 
-No API is currently exposed, you'll need direct database access.
-See graphql for an expirmental take on that.
+No API is exposed, you'll need direct database access.
 
-There is no async job queue or anything. The script is meant to be run via cron
-once a day or so and will look for stale/outdated information to update. The
-geocache download is limited per 24hrs and can be safely run multiple times.
+This script is meant to be run via cron once a day or so and will look for
+stale/outdated information to update. The geocache download count is limited per
+24hrs.
 
 To access Groundspeak API information, you need to have your login credentials in
 `GC_USERNAME`, `GC_PASSWORD`, and `GC_CONSUMER_KEY`.
