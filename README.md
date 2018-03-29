@@ -1,5 +1,7 @@
 # Geocache Siphon
 
+[![Build Status](https://travis-ci.org/foobert/gc-siphon.svg?branch=master)](https://travis-ci.org/foobert/gc-siphon)
+
 A pipeline to discover, download and parse geocaches.
 
 Steps involved:
