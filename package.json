@@ -1,13 +1,14 @@
 {
   "name": "gc-siphon",
   "version": "1.0.0",
-  "description": "",
+  "description": "A pipeline to discover, download and parse geocaches.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "$(npm bin)/mocha",
     "lint": "$(npm bin)/eslint ."
   },
+  "repository": "https://github.com/foobert/gc-siphon",
   "author": "foobert",
   "license": "MIT",
   "dependencies": {
