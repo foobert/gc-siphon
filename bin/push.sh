@@ -22,4 +22,4 @@ function main {
 }
 
 set -e
-main
+main "$@"
