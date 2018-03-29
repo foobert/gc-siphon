@@ -13,6 +13,6 @@ script:
 
 deploy:
   provider: script
-  script: bash bin/push.sh
+  script: bash bin/push.sh foobert/gc-siphon
   on:
     all_branches: true
