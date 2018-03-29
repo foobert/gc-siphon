@@ -1,0 +1,18 @@
+sudo: required
+
+services:
+- docker
+
+language: node_js
+node_js:
+- node
+
+script:
+- docker build . -t foobert/gc-siphon
+- npm test
+
+deploy:
+  provider: script
+  script: bash bin/push.sh
+  on:
+    all_branches: true
