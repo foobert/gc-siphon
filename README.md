@@ -1,8 +1,7 @@
 # Geocache Siphon
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/foobert/gc-siphon.svg)](https://greenkeeper.io/)
-
 [![Build Status](https://travis-ci.org/foobert/gc-siphon.svg?branch=master)](https://travis-ci.org/foobert/gc-siphon)
+[![Greenkeeper badge](https://badges.greenkeeper.io/foobert/gc-siphon.svg)](https://greenkeeper.io/)
 
 A pipeline to discover, download and parse geocaches.
 
