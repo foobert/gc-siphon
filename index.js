@@ -1,5 +1,4 @@
 const mongo = require("mongodb");
-const request = require("superagent");
 
 const prepare = require("./lib/prepare");
 const discover = require("./lib/discover");
@@ -19,7 +18,7 @@ async function main() {
   await prepare({ areas, gcs });
 
   // find new geocache numbers based in pre-defined areas
-  await discover({ request, areas, gcs });
+  await discover({ areas, gcs });
 
   // download geocache information via Groundspeak API (requires authentication)
   await processFetch(gcs);
