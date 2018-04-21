@@ -10,6 +10,7 @@ mock("superagent", request);
 const discover = require("../lib/discover");
 
 describe("discover", () => {
+  let db = null;
   let areas = null;
   let gcs = null;
   let tiles = null;
@@ -28,10 +29,7 @@ describe("discover", () => {
 
     mongodb.max_delay = 1;
     const MongoClient = mongodb.MongoClient;
-    const db = await MongoClient.connect(
-      "mongodb://localhost:27017/unittest",
-      {}
-    );
+    db = await MongoClient.connect("mongodb://localhost:27017/unittest", {});
 
     areas = db.collection("areas");
     gcs = db.collection("gcs");
@@ -44,6 +42,7 @@ describe("discover", () => {
   });
 
   after(() => {
+    db.close();
     mock.stop("superagent");
   });
 
