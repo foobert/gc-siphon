@@ -3,12 +3,15 @@ const { expect } = require("chai");
 const sinon = require("sinon");
 const moment = require("moment");
 const mongodb = require("mongo-mock");
+const mock = require("mock-require");
+const request = {};
+mock("superagent", request);
+
 const discover = require("../lib/discover");
 
 describe("discover", () => {
   let areas = null;
   let gcs = null;
-  let request = {};
   let tiles = null;
 
   before(async () => {
@@ -40,6 +43,10 @@ describe("discover", () => {
     tiles = {};
   });
 
+  after(() => {
+    mock.stop("superagent");
+  });
+
   const setTile = ({ x, y, z }, v) => {
     tiles[JSON.stringify({ x, y, z })] = v;
   };
@@ -56,7 +63,7 @@ describe("discover", () => {
       { name: "area 2", bbox: [{ lat: 10, lon: 10 }, { lat: 11, lon: 11 }] }
     ]);
 
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
 
     const docs = await areas.find({}).toArray();
     for (let doc of docs) {
@@ -82,7 +89,7 @@ describe("discover", () => {
       }
     ]);
 
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
 
     const docs = await areas.find({}).toArray();
     for (let doc of docs) {
@@ -106,7 +113,7 @@ describe("discover", () => {
       { discover_date: 1 }
     );
 
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
 
     const { discover_date: after_date } = await areas.findOne(
       {},
@@ -126,7 +133,7 @@ describe("discover", () => {
     // return something for zoom level 12, but nothing else
     setTile({ x: 2048, y: 2046, z: 12 }, { "(0,0)": [{ i: "GC0001" }] });
 
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
 
     const count = await gcs.count({});
     expect(count).to.be.at.least(1);
@@ -148,7 +155,7 @@ describe("discover", () => {
         "(0,0)": [{ i: "GC0001" }, { i: "GC0002" }]
       }
     );
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
     const count = await gcs.count({});
     expect(count).to.equal(2);
   });
@@ -173,7 +180,7 @@ describe("discover", () => {
     );
 
     const now = new Date();
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
 
     const gc1 = await gcs.find({ _id: "GC0001" }).next();
     const gc2 = await gcs.find({ _id: "GC0002" }).next();
@@ -205,7 +212,7 @@ describe("discover", () => {
         bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
       }
     ]);
-    await discover({ request: request, areas: areas, gcs });
+    await discover({ areas, gcs });
     expect(
       request.get.calledWithMatch(/https:\/\/tiles0[1234]\.geocaching\.com\//)
     ).to.be.true;
