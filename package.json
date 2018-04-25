@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "$(npm bin)/mocha",
-    "lint": "$(npm bin)/eslint ."
+    "test": "nyc mocha",
+    "lint": "eslint ."
   },
   "repository": "https://github.com/foobert/gc-siphon",
   "author": "foobert",
@@ -26,6 +26,8 @@
     "mocha": "^5.0.0",
     "mock-require": "^3.0.2",
     "mongo-mock": "^3.1.0",
-    "sinon": "^4.2.2"
+    "nyc": "^11.7.1",
+    "sinon": "^4.2.2",
+    "sinon-chai": "^3.0.0"
   }
 }
