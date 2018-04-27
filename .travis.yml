@@ -9,7 +9,7 @@ node_js:
 
 script:
 - docker build . -t foobert/gc-siphon
-- npm coverage
+- npm run coverage
 
 deploy:
   provider: script
