@@ -8,8 +8,8 @@ const request = {};
 mock("superagent", request);
 
 const loginMock = {
-  login: sinon.stub().resolves("secret-access-token"),
-  canLogin: sinon.stub().returns(true)
+  login: sinon.stub(),
+  canLogin: sinon.stub()
 };
 
 mock("../lib/login", loginMock);
@@ -45,10 +45,13 @@ describe("apifetch", () => {
         ]
       }
     });
-
-    await gcs.deleteMany({});
+    loginMock.login.resolves("secret-access-token");
+    loginMock.canLogin.returns(true);
     loginMock.login.resetHistory();
     loginMock.canLogin.resetHistory();
+    request.send.resetHistory();
+
+    await gcs.deleteMany({});
   });
 
   after(() => {
@@ -211,5 +214,35 @@ describe("apifetch", () => {
     expect(request.send.getCall(1).args[0].CacheCode.CacheCodes).to.have.length(
       10
     );
+  });
+
+  it("should do nothing when env is not set", async () => {
+    loginMock.canLogin.returns(false);
+    await gcs.insertMany([
+      {
+        _id: "GC0001",
+        gc: "GC0001"
+      }
+    ]);
+
+    await apifetch(gcs);
+
+    const doc = await gcs.findOne({});
+    expect(doc.api_date).to.not.exist;
+  });
+
+  it("should handle errors", async () => {
+    await gcs.insertMany(
+      _.range(51).map(i => ({
+        _id: "GC00" + i,
+        gc: "GC00" + i
+      }))
+    );
+    request.send = sinon.stub().throws(new Error("boom"));
+
+    await apifetch(gcs);
+
+    expect(await gcs.count({ api_date: { $exists: true } })).to.equal(0);
+    expect(request.send.callCount).to.equal(1);
   });
 });

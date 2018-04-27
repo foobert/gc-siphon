@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const { expect } = require("chai");
-const { ageLabel, daysAgo, distance } = require("../lib/util");
+const { ageLabel, daysAgo } = require("../lib/util");
 
 describe("ageLabel", () => {
   it("should tell the age", () => {
@@ -33,16 +33,5 @@ describe("daysAgo", () => {
     const yesterday = daysAgo(1);
     const msecPerDay = 86400000;
     expect(now - yesterday).to.be.within(msecPerDay - 1000, msecPerDay + 1000);
-  });
-});
-
-describe("distance", () => {
-  it("should be the distance between two coordinates", () => {
-    const berlin = { lat: 52.519116, lon: 13.403853 };
-    const auckland = { lat: -36.858264, lon: 174.762845 };
-    const d = distance(berlin, auckland);
-    // 1km error is probably good enough
-    // I got the reference from some website
-    expect(d).to.closeTo(17746830, 1000);
   });
 });
