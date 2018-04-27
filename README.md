@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/foobert/gc-siphon.svg?branch=master)](https://travis-ci.org/foobert/gc-siphon)
 [![Greenkeeper badge](https://badges.greenkeeper.io/foobert/gc-siphon.svg)](https://greenkeeper.io/)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/903775268bcc482fa26a53a3c7978add)](https://www.codacy.com/app/foobert/gc-siphon)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/903775268bcc482fa26a53a3c7978add)](https://www.codacy.com/app/foobert/gc-siphon)
 
 A pipeline to discover, download and parse geocaches.
 
