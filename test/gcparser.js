@@ -2,7 +2,7 @@
 const { expect } = require("chai");
 
 const constants = require("../lib/constants");
-const { parse, PARSER_VERSION } = require("../lib/gcparser");
+const { parse, parseCoord, PARSER_VERSION } = require("../lib/gcparser");
 
 describe("geocache parser", () => {
   it("should handle premium geocaches", () => {
@@ -115,10 +115,83 @@ describe("geocache parser", () => {
     const parsed = parse({});
     expect(parsed.premium).to.be.false;
   });
+
+  describe("found score", () => {
+    const found = {
+      LogType: {
+        WptLogTypeId: 2
+      }
+    };
+
+    const bad = [3, 7, 22, 45].map(x => ({
+      LogType: {
+        WptLogTypeId: x
+      }
+    }));
+
+    it("should default to 1 when logs are missing", () => {
+      const parsed = parse({});
+      expect(parsed.foundScore).to.equal(1);
+    });
+
+    it("should default to 1 when logs are empty", () => {
+      const parsed = parse({ GeocacheLogs: [] });
+      expect(parsed.foundScore).to.equal(1);
+    });
+
+    it("should be 1 when there are only founds", () => {
+      const parsed = parse({ GeocacheLogs: [found, found, found] });
+      expect(parsed.foundScore).to.equal(1);
+    });
+
+    describe("'bad' log types", () => {
+      for (const log of bad) {
+        it(
+          "should be 0 when the last log was a " + log.LogType.WptLogTypeId,
+          () => {
+            const parsed = parse({ GeocacheLogs: [log, found, found] });
+            expect(parsed.foundScore).to.equal(0);
+          }
+        );
+
+        it(
+          "should be 0.5 when the second last log was a " +
+            log.LogType.WptLogTypeId,
+          () => {
+            const parsed = parse({ GeocacheLogs: [found, log, found] });
+            expect(parsed.foundScore).to.equal(0.5);
+          }
+        );
+      }
+    });
+  });
 });
 
 describe("parser version", () => {
   it("should be a string", () => {
     expect(PARSER_VERSION).to.be.a("string");
+  });
+});
+
+describe("coordinate parser", () => {
+  it("should be null if input is null", () => {
+    const coord = parseCoord(null);
+    expect(coord).to.not.exist;
+  });
+
+  it("should be null if longitude is missing", () => {
+    const coord = parseCoord({ Latitude: 1 });
+    expect(coord).to.not.exist;
+  });
+
+  it("should be null if latitude is missing", () => {
+    const coord = parseCoord({ Longitude: 1 });
+    expect(coord).to.not.exist;
+  });
+
+  it("should be a GeoJSON point", () => {
+    const coord = parseCoord({ Longitude: 1, Latitude: 2 });
+    expect(coord.type).to.equal("Point");
+    expect(coord.coordinates).to.deep.equal([1, 2]);
   });
 });
