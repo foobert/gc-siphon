@@ -165,6 +165,11 @@ describe("geocache parser", () => {
       }
     });
   });
+
+  it("should parse owner", () => {
+    const parsed = parse({ Owner: { UserName: "foo bar" } });
+    expect(parsed.owner).to.equal("foo bar");
+  });
 });
 
 describe("parser version", () => {
