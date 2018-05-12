@@ -218,6 +218,18 @@ describe("discover", () => {
     expect(request.accept.calledWith("json")).to.be.true;
   });
 
+  it("should query tile images before tile data", async () => {
+    await areas.insertMany([
+      {
+        name: "area 1",
+        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+      }
+    ]);
+    await discover({ areas, gcs });
+
+    expect(request.get.calledWithMatch(/\/map\.png$/));
+  });
+
   it("should handle tile fetch errors", async () => {
     request.query = sinon.stub().returns({ ok: false });
     await areas.insertMany([
@@ -231,6 +243,22 @@ describe("discover", () => {
       expect(false).to.be.true;
     } catch (err) {
       expect(err.message).to.equal("Unable to fetch tile");
+    }
+  });
+
+  it("should handle empty tile responses", async () => {
+    request.query = sinon.stub().returns({ ok: true, body: {} });
+    await areas.insertMany([
+      {
+        name: "area 1",
+        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+      }
+    ]);
+    try {
+      await discover({ areas, gcs });
+      expect(false).to.be.true;
+    } catch (err) {
+      expect(err.message).to.equal("Empty tile data");
     }
   });
 });
