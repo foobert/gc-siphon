@@ -5,6 +5,7 @@ const discover = require("./lib/discover");
 const processParse = require("./lib/parse");
 const processFetch = require("./lib/apifetch");
 const processLogs = require("./lib/logs");
+const metrics = require("./lib/metrics");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
@@ -13,6 +14,8 @@ async function main() {
   const areas = db.collection("areas");
   const gcs = db.collection("gcs");
   const users = db.collection("users");
+
+  await metrics({ startup: 1 });
 
   // setup the database etc.
   await prepare({ areas, gcs });

@@ -15,6 +15,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "debug": "^3.1.0",
+    "elasticsearch": "^15.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.21.0",
     "mongodb": "^3.0.1",
