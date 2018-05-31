@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 const { expect } = require("chai");
+const turf = require("@turf/turf");
 const {
   toTile,
   toTiles,
@@ -22,17 +23,12 @@ describe("toTile", () => {
 
 describe("toTiles", () => {
   it("should return a list of tiles", () => {
-    let tiles = toTiles({ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }, 11);
+    let { geometry } = turf.bboxPolygon([0, 0, 0.1, 0.1]);
+    let tiles = toTiles(geometry, 11);
     expect(tiles).to.deep.equal([
       { x: 1024, y: 1023, z: 11 },
       { x: 1024, y: 1024, z: 11 }
     ]);
-  });
-
-  it("should sort tiles", () => {
-    let tiles1 = toTiles({ lat: 10, lon: 1 }, { lat: 11, lon: -1 }, 11);
-    let tiles2 = toTiles({ lat: 11, lon: -1 }, { lat: 10, lon: 1 }, 11);
-    expect(tiles1).to.deep.equal(tiles2);
   });
 });
 
