@@ -76,14 +76,14 @@ describe("discover", () => {
         name: "area 1",
         bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
         discover_date: moment()
-          .subtract(25, "hours")
+          .subtract(24, "hours")
           .toDate()
       },
       {
         name: "area 2",
         bbox: [{ lat: 10, lon: 10 }, { lat: 11, lon: 11 }],
         discover_date: moment()
-          .subtract(24, "hours")
+          .subtract(23, "hours")
           .toDate()
       }
     ]);
@@ -102,7 +102,7 @@ describe("discover", () => {
         name: "area 1",
         bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
         discover_date: moment()
-          .subtract(23, "hours")
+          .subtract(22, "hours")
           .toDate()
       }
     ]);

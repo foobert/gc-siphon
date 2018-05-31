@@ -1,6 +1,6 @@
 /* eslint-env mocha */
 const { expect } = require("chai");
-const { ageLabel, daysAgo } = require("../lib/util");
+const { ageLabel, daysAgo, hoursAgo } = require("../lib/util");
 
 describe("ageLabel", () => {
   it("should tell the age", () => {
@@ -33,5 +33,21 @@ describe("daysAgo", () => {
     const yesterday = daysAgo(1);
     const msecPerDay = 86400000;
     expect(now - yesterday).to.be.within(msecPerDay - 1000, msecPerDay + 1000);
+  });
+});
+
+describe("hoursAgo", () => {
+  it("should return a date object", () => {
+    expect(hoursAgo(24)).to.be.a("Date");
+  });
+
+  it("should be n hours ago", () => {
+    const now = new Date();
+    const anHourAgo = hoursAgo(1);
+    const msecPerHour = 3600000;
+    expect(now - anHourAgo).to.be.within(
+      msecPerHour - 1000,
+      msecPerHour + 1000
+    );
   });
 });
