@@ -24,7 +24,7 @@ async function main() {
   await discover({ areas, gcs });
 
   // download geocache information via Groundspeak API (requires authentication)
-  await processFetch(gcs);
+  await processFetch({ areas, gcs });
 
   // download geocache log information via Groundspeak API (requires authentication)
   await processLogs({ users, gcs });
