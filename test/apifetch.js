@@ -129,6 +129,23 @@ describe("apifetch", () => {
     expect(doc.api_date.toISOString()).to.equal(newDate.toISOString());
   });
 
+  it("should skip recently updated premium documents", async () => {
+    const newDate = daysAgo(89);
+    await gcs.insertMany([
+      {
+        _id: "GC0001",
+        gc: "GC0001",
+        api: { some: "data", Archived: false, IsPremium: true },
+        api_date: newDate
+      }
+    ]);
+
+    await apifetch({ gcs, areas });
+
+    const doc = await gcs.findOne({});
+    expect(doc.api_date.toISOString()).to.equal(newDate.toISOString());
+  });
+
   it("should process new documents", async () => {
     await gcs.insertMany([
       {
