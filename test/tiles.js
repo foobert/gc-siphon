@@ -19,6 +19,12 @@ describe("toTile", () => {
     expect(x).to.equal(1024);
     expect(y).to.equal(1024);
   });
+
+  it("should translate coordinates to a tile", () => {
+    let { x, y } = toTile(52.512612, 13.387648, 12);
+    expect(x).to.equal(2200);
+    expect(y).to.equal(1343);
+  });
 });
 
 describe("toTiles", () => {
@@ -29,6 +35,29 @@ describe("toTiles", () => {
       { x: 1024, y: 1023, z: 11 },
       { x: 1024, y: 1024, z: 11 }
     ]);
+  });
+
+  it("should work with real-life data", () => {
+    let geometry = {
+      type: "Polygon",
+      coordinates: [
+        [
+          [11.404412, 48.065974],
+          [11.733163, 48.065974],
+          [11.733163, 48.275886],
+          [11.404412, 48.275886],
+          [11.404412, 48.065974]
+        ]
+      ]
+    };
+    let tiles = toTiles(geometry, 12);
+    let expected = [];
+    for (let x = 2177; x <= 2181; x++) {
+      for (let y = 1419; y <= 1422; y++) {
+        expected.push({ x, y, z: 12 });
+      }
+    }
+    expect(tiles).to.deep.equal(expected);
   });
 });
 
