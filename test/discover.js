@@ -70,6 +70,26 @@ describe("discover", () => {
     }
   });
 
+  it("should set discover count", async () => {
+    await areas.insertMany([
+      {
+        name: "area 1",
+        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+      }
+    ]);
+
+    // return something for zoom level 12, but nothing else
+    setTile(
+      { x: 2048, y: 2046, z: 12 },
+      { "(0,0)": [{ i: "GC0001" }, { i: "GC0002" }] }
+    );
+
+    await discover({ areas, gcs });
+
+    const doc = await areas.findOne({});
+    expect(doc.count).to.equal(2);
+  });
+
   it("should update discover date on old areas", async () => {
     await areas.insertMany([
       {
