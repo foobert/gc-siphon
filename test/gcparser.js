@@ -72,9 +72,15 @@ describe("geocache parser", () => {
       [5, constants.type.LETTERBOX],
       [6, constants.type.EVENT],
       [8, constants.type.MYSTERY],
+      [9, constants.type.APE],
+      [11, constants.type.WEBCAM],
       [13, constants.type.CITO],
       [137, constants.type.EARTH],
-      [1858, constants.type.WHERIGO]
+      [453, constants.type.MEGAEVENT],
+      [1304, constants.type.GPSADVENTURES],
+      [1858, constants.type.WHERIGO],
+      [3773, constants.type.GCHQ],
+      [7005, constants.type.GIGAEVENT]
     ];
     for (let [input, output] of cases) {
       it(`should parse type ${input} into ${output}`, () => {
