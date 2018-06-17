@@ -34,6 +34,13 @@ describe("daysAgo", () => {
     const msecPerDay = 86400000;
     expect(now - yesterday).to.be.within(msecPerDay - 1000, msecPerDay + 1000);
   });
+
+  it("should honor the specified 'now' value", () => {
+    const now = new Date("2000-01-02");
+    const yesterday = daysAgo(1, now);
+    const msecPerDay = 86400000;
+    expect(now - yesterday).to.be.within(msecPerDay - 1000, msecPerDay + 1000);
+  });
 });
 
 describe("hoursAgo", () => {
@@ -44,6 +51,16 @@ describe("hoursAgo", () => {
   it("should be n hours ago", () => {
     const now = new Date();
     const anHourAgo = hoursAgo(1);
+    const msecPerHour = 3600000;
+    expect(now - anHourAgo).to.be.within(
+      msecPerHour - 1000,
+      msecPerHour + 1000
+    );
+  });
+
+  it("should honor a specifc 'now' value", () => {
+    const now = new Date("1999-01-02");
+    const anHourAgo = hoursAgo(1, now);
     const msecPerHour = 3600000;
     expect(now - anHourAgo).to.be.within(
       msecPerHour - 1000,

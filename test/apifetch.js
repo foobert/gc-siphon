@@ -7,6 +7,7 @@ const turf = require("@turf/turf");
 const mock = require("mock-require");
 const request = {};
 mock("superagent", request);
+const MockDate = require("mockdate");
 
 const loginMock = {
   login: sinon.stub(),
@@ -323,5 +324,48 @@ describe("apifetch", () => {
     );
 
     await apifetch({ gcs, areas });
+  });
+
+  it("should use a single timestamp during fetch", async () => {
+    const now = new Date();
+    const old1 = daysAgo(7, now);
+    const old2 = daysAgo(7, now);
+    old2.setDate(old2.getDate() - 1);
+    const now2 = new Date();
+    now2.setDate(now.getDate() + 1);
+
+    MockDate.set(now);
+
+    await gcs.insertMany(
+      _.range(50).map(i => ({
+        _id: "GC00" + i,
+        api: { some: "data" },
+        api_date: old2
+      }))
+    );
+
+    await gcs.insertMany([
+      { _id: "GC2", api: { some: "data" }, api_date: old1 }
+    ]);
+
+    request.send = async () => {
+      MockDate.set(now2);
+      return {
+        status: 200,
+        body: {
+          Geocaches: [
+            {
+              Code: "GC0001",
+              Key: "Value"
+            }
+          ]
+        }
+      };
+    };
+
+    await apifetch({ gcs, areas });
+
+    const doc = await gcs.findOne({ _id: "GC2" });
+    expect(doc.api_date.toISOString()).to.equal(old1.toISOString());
   });
 });
