@@ -281,4 +281,19 @@ describe("discover", () => {
       expect(err.message).to.equal("Empty tile data");
     }
   });
+
+  it("should skip areas marked with inactive", async () => {
+    await areas.insertMany([
+      {
+        name: "area 1",
+        bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
+        inactive: true
+      }
+    ]);
+
+    await discover({ areas, gcs });
+
+    const count = await areas.count({ discover_date: 1 });
+    expect(count).equal(0);
+  });
 });
