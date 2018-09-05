@@ -64,6 +64,11 @@ describe("geocache parser", () => {
     expect(parsed.hint).to.equal("foo bar baz");
   });
 
+  it("should parse fav points", () => {
+    const parsed = parse({ FavoritePoints: 42 });
+    expect(parsed.favpoints).to.equal(42);
+  });
+
   describe("type", () => {
     const cases = [
       [2, constants.type.TRADITIONAL],
