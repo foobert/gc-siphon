@@ -303,7 +303,7 @@ describe("discover", () => {
 
     await discover({ areas, gcs });
 
-    const count = await areas.count({ discover_date: 1 });
+    const count = await areas.count({ discover_date: { $exists: true } });
     expect(count).equal(0);
   });
 });
