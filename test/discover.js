@@ -306,4 +306,31 @@ describe("discover", () => {
     const count = await areas.count({ discover_date: { $exists: true } });
     expect(count).equal(0);
   });
+
+  it("should skip already discovered one-shot areas", async () => {
+    await areas.insertMany([
+      {
+        name: "area 1",
+        geometry: makeGeometry(0, 0, 1, 1),
+        one_shot: true,
+        inactive: false,
+        discover_date: moment()
+          .subtract(48, "hours")
+          .toDate()
+      }
+    ]);
+
+    const { discover_date: before_date } = await areas.findOne(
+      {},
+      { discover_date: 1 }
+    );
+
+    await discover({ areas, gcs });
+
+    const { discover_date: after_date } = await areas.findOne(
+      {},
+      { discover_date: 1 }
+    );
+    expect(before_date.toISOString()).to.equal(after_date.toISOString());
+  });
 });
