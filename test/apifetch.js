@@ -301,21 +301,6 @@ describe("apifetch", () => {
     expect(request.send.callCount).to.equal(1);
   });
 
-  it("should skip entries with api_skip", async () => {
-    await gcs.insertMany([
-      {
-        _id: "GC0001",
-        gc: "GC0001",
-        api_skip: true
-      }
-    ]);
-
-    await apifetch({ gcs, areas });
-
-    const doc = await gcs.findOne({});
-    expect(doc.api).to.not.exist;
-  });
-
   // $geoWithin isn't supported by mongomock, need to migrate away
   it.skip("should process documents from areas first", async () => {
     await areas.insert({
