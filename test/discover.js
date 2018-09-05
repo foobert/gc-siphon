@@ -5,9 +5,22 @@ const moment = require("moment");
 const mongodb = require("mongo-mock");
 const mock = require("mock-require");
 const request = {};
+const turf = require("@turf/turf");
 mock("superagent", request);
 
 const discover = require("../lib/discover");
+
+function makeGeometry(latA, lonA, latB, lonB) {
+  const bbox = [
+    Math.min(lonA, lonB),
+    Math.min(latA, latB),
+    Math.max(lonA, lonB),
+    Math.max(latA, latB)
+  ];
+  const feature = turf.bboxPolygon(bbox);
+
+  return feature.geometry;
+}
 
 describe("discover", () => {
   let db = null;
@@ -58,8 +71,8 @@ describe("discover", () => {
 
   it("should update discover date on undiscovered areas", async () => {
     await areas.insertMany([
-      { name: "area 1", bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }] },
-      { name: "area 2", bbox: [{ lat: 10, lon: 10 }, { lat: 11, lon: 11 }] }
+      { name: "area 1", geometry: makeGeometry(0, 0, 1, 1) },
+      { name: "area 2", geometry: makeGeometry(10, 10, 11, 11) }
     ]);
 
     await discover({ areas, gcs });
@@ -72,10 +85,7 @@ describe("discover", () => {
 
   it("should set discover count", async () => {
     await areas.insertMany([
-      {
-        name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
-      }
+      { name: "area 1", geometry: makeGeometry(0, 0, 0.1, 0.1) }
     ]);
 
     // return something for zoom level 12, but nothing else
@@ -94,14 +104,14 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
+        geometry: makeGeometry(0, 0, 1, 1),
         discover_date: moment()
           .subtract(24, "hours")
           .toDate()
       },
       {
         name: "area 2",
-        bbox: [{ lat: 10, lon: 10 }, { lat: 11, lon: 11 }],
+        geometry: makeGeometry(10, 10, 11, 11),
         discover_date: moment()
           .subtract(23, "hours")
           .toDate()
@@ -120,7 +130,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
+        geometry: makeGeometry(0, 0, 1, 1),
         discover_date: moment()
           .subtract(22, "hours")
           .toDate()
@@ -145,7 +155,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
 
@@ -164,7 +174,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     setTile({ x: 2048, y: 2046, z: 12 }, { "(0,0)": [{ i: "GC0001" }] });
@@ -187,7 +197,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     setTile({ x: 2048, y: 2046, z: 12 }, { "(0,0)": [{ i: "GC0001" }] });
@@ -228,7 +238,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     await discover({ areas, gcs });
@@ -242,7 +252,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     await discover({ areas, gcs });
@@ -255,7 +265,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     try {
@@ -271,7 +281,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 0.1, lon: 0.1 }]
+        geometry: makeGeometry(0, 0, 0.1, 0.1)
       }
     ]);
     try {
@@ -286,7 +296,7 @@ describe("discover", () => {
     await areas.insertMany([
       {
         name: "area 1",
-        bbox: [{ lat: 0, lon: 0 }, { lat: 1, lon: 1 }],
+        geometry: makeGeometry(0, 0, 1, 1),
         inactive: true
       }
     ]);
