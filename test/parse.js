@@ -8,7 +8,7 @@ chai.use(sinonChai);
 const process = require("../lib/parse");
 const { parse, parseCoord, PARSER_VERSION } = require("../lib/gcparser");
 
-describe("parse", () => {
+describe.skip("parse", () => {
   let gcs = null;
   let nextBatch = sinon.stub();
   let api = null;
