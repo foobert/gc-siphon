@@ -181,6 +181,39 @@ describe("geocache parser", () => {
     const parsed = parse({ Owner: { UserName: "foo bar" } });
     expect(parsed.owner).to.equal("foo bar");
   });
+
+  describe("attribute parser", () => {
+    it("should parse unknown attributes as todo", () => {
+      const parsed = parse({
+        Attributes: [{ AttributeTypeID: 999, IsOn: true }]
+      });
+      expect(parsed.attributes).to.deep.equal({ "todo#999": true });
+    });
+
+    it("should parse active attributes", () => {
+      const parsed = parse({
+        Attributes: [{ AttributeTypeID: 1, IsOn: true }]
+      });
+      expect(parsed.attributes).to.deep.equal({ dogs: true });
+    });
+
+    it("should parse inactive attributes", () => {
+      const parsed = parse({
+        Attributes: [{ AttributeTypeID: 1, IsOn: false }]
+      });
+      expect(parsed.attributes).to.deep.equal({ dogs: false });
+    });
+
+    it("should parse multiple attributes", () => {
+      const parsed = parse({
+        Attributes: [
+          { AttributeTypeID: 1, IsOn: true },
+          { AttributeTypeID: 2, IsOn: false }
+        ]
+      });
+      expect(parsed.attributes).to.deep.equal({ dogs: true, fee: false });
+    });
+  });
 });
 
 describe("parser version", () => {
