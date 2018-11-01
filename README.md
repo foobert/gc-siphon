@@ -22,3 +22,17 @@ stale/outdated information to update. The geocache download count is limited per
 
 To access Groundspeak API information, you need to have your login credentials in
 `GC_USERNAME`, `GC_PASSWORD`, and `GC_CONSUMER_KEY`.
+
+## Local Developing
+
+1. Install [nodejs](https://nodejs.org)
+2. Install [mongodb](https://www.mongodb.com)
+3. Install dependencies: `npm install`
+4. Set credentials in console:
+<pre>
+export GC_USERNAME=<username>
+export GC_PASSWORD=<password>
+export GC_CONSUMER_KEY=<consumer_key>
+</pre>
+5. Run: `npm start`
+6. (optional) Enable debuging: `export DEBUG=gc:\*`
