@@ -16,7 +16,8 @@ async function main() {
   const gcs = db.collection("gcs");
   const users = db.collection("users");
 
-  await metrics({ startup: 1 });
+  // let metrics know we're here
+  metrics.increment("startup");
 
   // setup the database etc.
   await prepare({ areas, gcs });
