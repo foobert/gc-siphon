@@ -1,18 +1,18 @@
 sudo: required
 
 services:
-- docker
+  - docker
 
 language: node_js
 node_js:
-- node
+  - node
 
 install:
-- npm install
+  - case $TRAVIS_BRANCH in greenkeeper*) npm i;; *) npm ci;; esac;
 
 script:
-- docker build . -t foobert/gc-siphon
-- npm run coverage
+  - docker build . -t foobert/gc-siphon
+  - npm run coverage
 
 deploy:
   provider: script
