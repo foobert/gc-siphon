@@ -6,6 +6,7 @@ const processParse = require("./lib/parse");
 const processFetch = require("./lib/apifetch");
 const processLogs = require("./lib/logs");
 const metrics = require("./lib/metrics");
+const g2fetch = require("./lib/g2fetch");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
@@ -15,7 +16,8 @@ async function main() {
   const gcs = db.collection("gcs");
   const users = db.collection("users");
 
-  await metrics({ startup: 1 });
+  // let metrics know we're here
+  metrics.increment("startup");
 
   // setup the database etc.
   await prepare({ areas, gcs });
@@ -25,6 +27,8 @@ async function main() {
 
   // download geocache information via Groundspeak API (requires authentication)
   await processFetch({ areas, gcs });
+
+  await g2fetch({ gcs });
 
   // download geocache log information via Groundspeak API (requires authentication)
   await processLogs({ users, gcs });
