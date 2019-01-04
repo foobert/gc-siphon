@@ -8,7 +8,7 @@ node_js:
   - node
 
 install:
-  - case $TRAVIS_BRANCH in greenkeeper*) npm i;; *) npm ci;; esac;
+  - npm i
 
 script:
   - docker build . -t foobert/gc-siphon
