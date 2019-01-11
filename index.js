@@ -25,10 +25,11 @@ async function main() {
   // find new geocache numbers based in pre-defined areas
   await discover({ areas, gcs });
 
+  // download geocache information via G2 database (requires GC_G2_URI)
+  await g2fetch({ gcs });
+
   // download geocache information via Groundspeak API (requires authentication)
   await processFetch({ areas, gcs });
-
-  await g2fetch({ gcs });
 
   // download geocache log information via Groundspeak API (requires authentication)
   await processLogs({ users, gcs });
