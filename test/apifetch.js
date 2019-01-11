@@ -27,7 +27,10 @@ describe("apifetch", () => {
   before(async () => {
     mongodb.max_delay = 1;
     const MongoClient = mongodb.MongoClient;
-    db = await MongoClient.connect("mongodb://localhost:27017/unittest", {});
+    db = await MongoClient.connect(
+      "mongodb://localhost:27017/unittest",
+      {}
+    );
 
     gcs = db.collection("gcs");
     areas = db.collection("areas");
@@ -223,7 +226,8 @@ describe("apifetch", () => {
         _id: "GC00" + i,
         gc: "GC00" + i,
         api_date: now,
-        api: {}
+        api: {},
+        api_source: "groundspeak"
       }))
     );
 
@@ -248,7 +252,8 @@ describe("apifetch", () => {
         _id: "GC00" + i,
         gc: "GC00" + i,
         api_date: now,
-        api: {}
+        api: {},
+        api_source: "groundspeak"
       }))
     );
 
@@ -269,6 +274,42 @@ describe("apifetch", () => {
     expect(request.send.getCall(1).args[0].CacheCode.CacheCodes).to.have.length(
       10
     );
+  });
+
+  it("should ignore non-groundspeak data for daily limit", async () => {
+    const now = new Date();
+
+    await gcs.insertMany(
+      _.range(1990).map(i => ({
+        _id: "GC00" + i,
+        gc: "GC00" + i,
+        api_date: now,
+        api: {},
+        api_source: "groundspeak"
+      }))
+    );
+
+    await gcs.insertMany(
+      _.range(10).map(i => ({
+        _id: "GC10" + i,
+        gc: "GC10" + i,
+        api_date: now,
+        api: {},
+        api_source: "other"
+      }))
+    );
+
+    await gcs.insertMany(
+      _.range(20).map(i => ({
+        _id: "GC20" + i,
+        gc: "GC20" + i
+      }))
+    );
+
+    // 1990 groundspeak, 10 other (ignored), 20 todo => fetch 10
+    await apifetch({ gcs, areas });
+
+    expect(request.send.calledOnce).to.be.true;
   });
 
   it("should do nothing when env is not set", async () => {
