@@ -7,6 +7,7 @@ const processFetch = require("./lib/apifetch");
 const processLogs = require("./lib/logs");
 const metrics = require("./lib/metrics");
 const g2fetch = require("./lib/g2fetch");
+const stats = require("./lib/stats");
 
 async function main() {
   const url = process.env["GC_DB_URI"] || "mongodb://localhost:27017";
@@ -36,6 +37,9 @@ async function main() {
 
   // parse/normalize geocache information
   await processParse(gcs);
+
+  // publish some statistics
+  await stats({ gcs });
 
   await client.close();
 }
