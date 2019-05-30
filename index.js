@@ -35,10 +35,11 @@ async function main() {
   // download geocache log information via Groundspeak API (requires authentication)
   await processLogs({ users, gcs });
 
-  // parse/normalize geocache information
-  await processParse(gcs);
+  // parse/normalize geocache information, now handled by separate kotlin thing
 
   // publish some statistics
+  // will probably generate invalid statistics because of the parsing thing,
+  // but okay for now
   await stats({ gcs });
 
   await client.close();
