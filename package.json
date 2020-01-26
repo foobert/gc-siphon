@@ -29,7 +29,7 @@
     "codacy-coverage": "^3.1.0",
     "eslint": "^5.0.0",
     "eslint-config-prettier": "^3.0.0",
-    "mocha": "^6.0.0",
+    "mocha": "^7.0.1",
     "mock-require": "^3.0.2",
     "mockdate": "^2.0.2",
     "mongo-mock": "^3.3.2",
