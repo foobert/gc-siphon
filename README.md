@@ -29,10 +29,12 @@ To access Groundspeak API information, you need to have your login credentials i
 2. Install [mongodb](https://www.mongodb.com)
 3. Install dependencies: `npm install`
 4. Set credentials in console:
-<pre>
+
+```properties
 export GC_USERNAME=<username>
 export GC_PASSWORD=<password>
 export GC_CONSUMER_KEY=<consumer_key>
-</pre>
+```
+
 5. Run: `npm start`
-6. (optional) Enable debuging: `export DEBUG=gc:\*`
+6. (optional) Enable debugging: `export DEBUG=gc:\*`
